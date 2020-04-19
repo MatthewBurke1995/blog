@@ -68,7 +68,8 @@
     </div>
   </footer><!-- /.post-info -->
   <div class="entry-content">
-    <p>With the 2019/20 premier league on standby due to coronavirus, many people are wondering what will happen with the rest of the season. With the power of a hierarchical bayesian model and the data from the season so far I'll try to predict the final standings for each team.</p>
+    <h4>tl;dr Liverpool probably break the 100 point record, Sheffield United make it to the Champions League 1 in 4 times, playing out the season in neutral venues benefits Chelsea but disadvantages Manchester United</h4>
+<p>With the 2019/20 premier league on standby due to coronavirus, many people are wondering what will happen with the rest of the season. With the power of a hierarchical bayesian model and the data from the season so far I'll try to predict the final standings for each team.</p>
 <p>If you don't like looking at equations you might want to scroll down to the results. You can also <a href="https://github.com/MatthewBurke1995/premier-league-predction-1920">check out the code on github</a>.</p>
 <h2>Assumptions in the model</h2>
 <p>Before we get into the equations, let's think about how you would predict the goals scored in a football game for each side and how our predictions might change when we have more information. Imagine I asked you to predict the score between team A and B in the premier league without telling you thee names of team A or B. What you'd probably end up doing is predicting that team A scored the average amount of goals for a team in the premier league and team B scored the same (this is pretty much what the intercept in our model below is).</p>
@@ -76,33 +77,96 @@
 <p>There's nothing special about knowing team A, if we knew team B then we would adjust our expectations the same way, i.e. XG of team A depends on team A's attacking ability and team B's defensice ability.</p>
 <p>And if the game was at Anfield, Liverpool's homeground, then you'd give even more of an advantage to a Liverpool win, but the home field advantage isn't the same for every team (for example Southampton have a better record during away games) so you'd want to take into account the boost in performance of playing at home.</p>
 <p>That's a long way of saying:</p>
-<p>$$ XG_{a} = f(att_{a}, def_{b}, home_{a}, intercept) $$</p>
-<p>Were $att$ and $def$ attributes are measures of ability when the team plays in an away game, similarly the expected goals of team B, the away team, are:</p>
-<p>$$ XG_{b} = f(att_{b}, def_{a}, intercept) $$</p>
+<div class="math">$$ XG_{a} = f(att_{a}, def_{b}, home_{a}, intercept) $$</div>
+<p>Were <span class="math">\(att\)</span> and <span class="math">\(def\)</span> attributes are measures of ability when the team plays in an away game, similarly the expected goals of team B, the away team, are:</p>
+<div class="math">$$ XG_{b} = f(att_{b}, def_{a}, intercept) $$</div>
 <p>Alterntively instead of thinking about what we would like to know before we predict a scoreline we might think about what we learn when we see a scoreline. For instance if we saw a scoreline of 96-98 we can safely assume that each team have some attacking ability, that each team probably has some defensive ability, that the home advantage wasn't enough to give team A a victory and that we're witnessing a sport which has relatively high scorelines e.g. basketball (in this case we learn that the intercept value would be high).</p>
 <p>At least that's the assumptions going into this model, which is based off of <a href="http://danielweitzenfeld.github.io/passtheroc/blog/2014/10/28/bayes-premier-league/">Daniel Weitzenfeld's blog post</a> but with a few alterations. Here's the equations:</p>
-<p>$$ y_{gj}|\theta_{gj} = Poisson(\theta_{gj}) $$</p>
-<p>$$ log(\theta_{g1})= intercept + home_{h(g)} + att_{h(g)} + def_{a(g)} $$</p>
-<p>$$ log(\theta_{g2})= intercept + att_{a(g)} + def_{h(g)} $$</p>
-<p>$$ att_{t} = Normal(0,\tau_{att}) $$</p>
-<p>$$ def_{t} = Normal(0,\tau_{def}) $$</p>
-<p>$$ home_{t} = Normal(0,\tau_{home}) $$</p>
-<p>$$ \tau_{att,def,home} = Gamma(.1,.1) $$</p>
+<div class="math">$$ y_{gj}|\theta_{gj} = Poisson(\theta_{gj}) $$</div>
+<div class="math">$$ log(\theta_{g1})= intercept + home_{h(g)} + att_{h(g)} + def_{a(g)} $$</div>
+<div class="math">$$ log(\theta_{g2})= intercept + att_{a(g)} + def_{h(g)} $$</div>
+<div class="math">$$ att_{t} = Normal(0,\tau_{att}) $$</div>
+<div class="math">$$ def_{t} = Normal(0,\tau_{def}) $$</div>
+<div class="math">$$ home_{t} = Normal(0,\tau_{home}) $$</div>
+<div class="math">$$ \tau_{att,def,home} = Gamma(.1,.1) $$</div>
 <h2>Results</h2>
-<h3>Posterior distribution of position</h3>
-<p>Although it's mathematically possible for Manchester City to come first, across the 1000 simulations that I ran Liverpool always came in first. Sheffield united have a 1 in 4 chance of making the top 5 and getting a Champions League spot. No team is guaranteed to be regulated.</p>
+<p>I simulated the remaining season games 1000 times with the above model</p>
+<h3>Predicted positions</h3>
+<p>Although it's mathematically possible for Manchester City to come first, across the 1000 simulations that I ran Liverpool always came in first. Sheffield united have a 1 in 4 chance of getting a Champions League spot. Norwich are relegated 9/10 times and Aston Villa end up relegated approximately 2 thirds of the time.</p>
 <p><img alt="Position" src="./images/posterior_position.png"></p>
-<h2>Posterior distribution of points</h2>
+<h2>Predicted points</h2>
 <p>Liverpool have an even chance of breaking 100 points and beating Manchester City's record for most points in a single season. </p>
 <p><img alt="Points" src="./images/posterior_points.png"></p>
 <h2>Probability of Champions League spot</h2>
-<p><img alt="Champions league qualification probabilities" src="./images/champions_league_qualification.png"></p>
-<h2>Probability of Relegation</h2>
-<p><img alt="Relegation probabilities" src="./images/relegation.png"></p>
-<h2>What happens if all teams play on an Island?</h2>
+<p>With a regular season restart out of the picture until next year, some people have been proposing the idea of playing all remaining games in a COVID-19 free bubble i.e. in neutral stadiums without crowds. If this were to happen then the scheduled 'home' team will miss out on their home advantage, which could be argued is a natural part of the game. I ran the same 1000 season siulations for the remaining games, this time without the home advantage.</p>
 <p><img alt="Champions league qualification probabilities" src="./images/neutral_venues_champions_league_qualification.png"></p>
+<p>Most teams would be unaffected by moving the matches to a neutral venue but Manchester United would end up with a champions league spot 10% less often under the changed conditions while Chelsea absorb almost all of the benefits. I wanted to verify that this wasn't just a sampling error, so I used bootstrapping to draw up some confidence intervals below. Roughly 95% of the time Chelsea benefit more than Manchester United by the change to a neutral venue.</p>
+<p><img alt="Champions league qualification probabilities" src="./images/che_mun_neutral_venue.png"></p>
+<h2>Probability of Relegation</h2>
+<p>The change to venues doesn't affect the race to the bottom, suggesting that all of the bottom teams benefit in roughly the same proportion when they play at home. </p>
 <p><img alt="Relegation probabilities" src="./images/neutral_venues_relegation.png"></p>
-<h4>tl;dr Liverpool #1, Man City #2, Leicester #3 after that nobody knows.</h4>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
   </div><!-- /.entry-content -->
 </section>
         <footer id="contentinfo" class="body">
