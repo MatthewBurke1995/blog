@@ -8,7 +8,7 @@
 &lt;p&gt;There's nothing special about knowing team A, if we knew team B then we would adjust our expectations the same way, i.e. XG of team A depends on team A's attacking ability and team B's defensice ability.&lt;/p&gt;
 &lt;p&gt;And if the game was at Anfield, Liverpool's homeground, then you'd give even more of an advantage to a Liverpool win, but the home field advantage isn't the same for every team (for example Southampton have a better record during away games) so you'd want to take into account the boost in performance of playing at home.&lt;/p&gt;
 &lt;p&gt;That's a long way of saying:&lt;/p&gt;
-&lt;div class="math"&gt;$$ XG_{a} = f(att_{a}, def_{b}, home_{a}, intercept) $$&lt;/div&gt;
+&lt;p&gt;$ XG_{a} = f(att_{a}, def_{b}, home_{a}, intercept) $&lt;/p&gt;
 &lt;p&gt;Were &lt;span class="math"&gt;\(att\)&lt;/span&gt; and &lt;span class="math"&gt;\(def\)&lt;/span&gt; attributes are measures of ability when the team plays in an away game, similarly the expected goals of team B, the away team, are:&lt;/p&gt;
 &lt;div class="math"&gt;$$ XG_{b} = f(att_{b}, def_{a}, intercept) $$&lt;/div&gt;
 &lt;p&gt;Alterntively instead of thinking about what we would like to know before we predict a scoreline we might think about what we learn when we see a scoreline. For instance if we saw a scoreline of 96-98 we can safely assume that each team have some attacking ability, that each team probably has some defensive ability, that the home advantage wasn't enough to give team A a victory and that we're witnessing a sport which has relatively high scorelines e.g. basketball (in this case we learn that the intercept value would be high).&lt;/p&gt;
