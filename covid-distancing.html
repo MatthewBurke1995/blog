@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+          <title>mattb/log - Measuring the effects of social distancing policy</title>
+        <meta charset="utf-8" />
+        <link href="http://matthewburke1995.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mattb/log Full Atom Feed" />
+        <link href="http://matthewburke1995.github.io/feeds/statistics.atom.xml" type="application/atom+xml" rel="alternate" title="mattb/log Categories Atom Feed" />
+
+        <link rel="stylesheet" href="./theme/css/rdark.css" />
+	<link rel="stylesheet" type="text/css" href="./theme/css/main.css" />
+        <link href="./" type="application/atom+xml" rel="alternate" title="mattb/log ATOM Feed" /><!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	
+<!-- Using MathJax, with the delimiters $ -->
+<!-- Conflict with pygments for the .mo and .mi -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  "HTML-CSS": {
+  styles: {
+  ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+  },
+  tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']],processEscapes: true}
+  });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+
+
+
+
+    <meta name="tags" content="data" />
+    <meta name="tags" content="statistics" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="./">mattb/log <strong>My 2.000000004 cents</strong></a></h1>
+        </header><!-- /#banner -->
+        <nav id="menu"><ul>
+            <li class="active"><a href="./category/statistics.html">statistics</a></li>
+        </ul></nav><!-- /#menu -->
+<section id="content" class="body">
+  <header>
+    <h2 class="entry-title">
+      <a href="./covid-distancing.html" rel="bookmark"
+         title="Permalink to Measuring the effects of social distancing policy">Measuring the effects of social distancing policy</a></h2>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2020-05-05T10:20:00+10:00">
+      Tue 05 May 2020
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="./author/matthew-burke.html">Matthew Burke</a>
+    </address>
+    <div class="category">
+        Category: <a href="./category/statistics.html">statistics</a>
+    </div>
+    <div class="tags">
+        Tags:
+            <a href="./tag/data.html">data</a>
+            <a href="./tag/statistics.html">statistics</a>
+    </div>
+  </footer><!-- /.post-info -->
+  <div class="entry-content">
+    <p>Recently there was a <a href="https://news.ycombinator.com/item?id=22915837">post on hacker news about the Sigmoid function</a> and its relevance to that thing on the news. There's also been a <a href="https://www.medrxiv.org/content/10.1101/2020.04.10.20060822v1.full.pdf">paper on medRxiv</a> about predicting the maximum amount of COVID-19 cases after reaching the peak number of new daily infections. </p>
+<p>It's true that if you know exactly how many people, <span class="math">\(N\)</span>, will be infected then the cumulative number of cases will look something like a sigmoid function approaching <span class="math">\(N\)</span>. But the real phenomena we are seeing is a changing R0 value due to social distancing. </p>
+<p>A group of researchers from Canada used a SEIQR model while adding a <span class="math">\(f(t)\)</span> multiplier to the R0 value. The idea is that <span class="math">\(f(t)\)</span> starts at 1 and decreases linearly over the time that social distancing measures are introduced. You can see <a href="https://github.com/carolinecolijn/distancing-impact-covid19">their git repo here</a> with my clone for Australian data and parameters <a href="https://github.com/MatthewBurke1995/distancing-impact-covid-19-australia">here</a>.</p>
+<p>If you'd like to run the code:</p>
+<div class="highlight"><pre><span></span>git clone https://github.com/MatthewBurke1995/distancing-impact-covid-19-australia
+<span class="nb">cd</span> distancing-impact-covid-19-australia 
+docker run -e <span class="nv">PASSWORD</span><span class="o">=</span>password --rm -p <span class="m">8787</span>:8787 -v /<span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/home/rstudio/covid-distancing rocker/verse
+<span class="c1"># in browser go to &#39;http://localhost:8787/&#39;</span>
+<span class="c1"># login using username:rstudio, password:password</span>
+<span class="c1"># In the r console: setwd(&quot;covid-distancing&quot;)</span>
+<span class="c1"># follow readme from here</span>
+</pre></div>
+
+
+<p>Results using Australian numbers suggest that the initial R0 was approximately 3.6, and that the final <span class="math">\(f(t)\)</span> value has a mean of 0.03 with a standard deviation of 0.02 i.e. R0 after the lockdown has fallen to around 0.1.</p>
+<h3>New case count</h3>
+<p><img alt="New case count" src="./images/covid19/new_case_count.png"></p>
+<p>At the current rate Australia reaches 0 new cases in mid May (according to the model anyway).</p>
+<h3>Cumulative case count</h3>
+<p><img alt="Cumulative case count" src="./images/covid19/cumulative_case_count.png"></p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+  </div><!-- /.entry-content -->
+</section>
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+        </footer><!-- /#contentinfo -->
+</body>
+</html>

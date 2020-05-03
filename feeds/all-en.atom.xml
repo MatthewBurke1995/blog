@@ -1,5 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>m10e</title><link href="http://matthewburke1995.github.io/" rel="alternate"></link><link href="http://matthewburke1995.github.io/feeds/all-en.atom.xml" rel="self"></link><id>http://matthewburke1995.github.io/</id><updated>2020-04-16T10:20:00+10:00</updated><subtitle>My 2.000000004 cents</subtitle><entry><title>Predicting the remaining matches of the 19/20 Premier League</title><link href="http://matthewburke1995.github.io/premier-league-1920.html" rel="alternate"></link><published>2020-04-16T10:20:00+10:00</published><updated>2020-04-16T10:20:00+10:00</updated><author><name>Matthew Burke</name></author><id>tag:matthewburke1995.github.io,2020-04-16:/premier-league-1920.html</id><summary type="html">&lt;p&gt;Using pymc3 to predict the remaining matches of the 19/20 premier league season.&lt;/p&gt;</summary><content type="html">&lt;h4&gt;tl;dr Liverpool probably break the 100 point record, Sheffield United make it to the Champions League 1 in 4 times, playing out the season in neutral venues benefits Chelsea but disadvantages Manchester United&lt;/h4&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mattb/log</title><link href="http://matthewburke1995.github.io/" rel="alternate"></link><link href="http://matthewburke1995.github.io/feeds/all-en.atom.xml" rel="self"></link><id>http://matthewburke1995.github.io/</id><updated>2020-05-05T10:20:00+10:00</updated><subtitle>My 2.000000004 cents</subtitle><entry><title>Measuring the effects of social distancing policy</title><link href="http://matthewburke1995.github.io/covid-distancing.html" rel="alternate"></link><published>2020-05-05T10:20:00+10:00</published><updated>2020-05-05T10:20:00+10:00</updated><author><name>Matthew Burke</name></author><id>tag:matthewburke1995.github.io,2020-05-05:/covid-distancing.html</id><summary type="html">&lt;p&gt;Making the R0 value time dependent as a way of measuring the effectiveness of Australian social distancing policy&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recently there was a &lt;a href="https://news.ycombinator.com/item?id=22915837"&gt;post on hacker news about the Sigmoid function&lt;/a&gt; and its relevance to that thing on the news. There's also been a &lt;a href="https://www.medrxiv.org/content/10.1101/2020.04.10.20060822v1.full.pdf"&gt;paper on medRxiv&lt;/a&gt; about predicting the maximum amount of COVID-19 cases after reaching the peak number of new daily infections. &lt;/p&gt;
+&lt;p&gt;It's true that if you know exactly how many people, &lt;span class="math"&gt;\(N\)&lt;/span&gt;, will be infected then the cumulative number of cases will look something like a sigmoid function approaching &lt;span class="math"&gt;\(N\)&lt;/span&gt;. But the real phenomena we are seeing is a changing R0 value due to social distancing. &lt;/p&gt;
+&lt;p&gt;A group of researchers from Canada used a SEIQR model while adding a &lt;span class="math"&gt;\(f(t)\)&lt;/span&gt; multiplier to the R0 value. The idea is that &lt;span class="math"&gt;\(f(t)\)&lt;/span&gt; starts at 1 and decreases linearly over the time that social distancing measures are introduced. You can see &lt;a href="https://github.com/carolinecolijn/distancing-impact-covid19"&gt;their git repo here&lt;/a&gt; with my clone for Australian data and parameters &lt;a href="https://github.com/MatthewBurke1995/distancing-impact-covid-19-australia"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you'd like to run the code:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git clone https://github.com/MatthewBurke1995/distancing-impact-covid-19-australia
+&lt;span class="nb"&gt;cd&lt;/span&gt; distancing-impact-covid-19-australia 
+docker run -e &lt;span class="nv"&gt;PASSWORD&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;password --rm -p &lt;span class="m"&gt;8787&lt;/span&gt;:8787 -v /&lt;span class="k"&gt;$(&lt;/span&gt;&lt;span class="nb"&gt;pwd&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;:/home/rstudio/covid-distancing rocker/verse
+&lt;span class="c1"&gt;# in browser go to &amp;#39;http://localhost:8787/&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;# login using username:rstudio, password:password&lt;/span&gt;
+&lt;span class="c1"&gt;# In the r console: setwd(&amp;quot;covid-distancing&amp;quot;)&lt;/span&gt;
+&lt;span class="c1"&gt;# follow readme from here&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Results using Australian numbers suggest that the initial R0 was approximately 3.6, and that the final &lt;span class="math"&gt;\(f(t)\)&lt;/span&gt; value has a mean of 0.03 with a standard deviation of 0.02 i.e. R0 after the lockdown has fallen to around 0.1.&lt;/p&gt;
+&lt;h3&gt;New case count&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="New case count" src="http://matthewburke1995.github.io/images/covid19/new_case_count.png"&gt;&lt;/p&gt;
+&lt;p&gt;At the current rate Australia reaches 0 new cases in mid May (according to the model anyway).&lt;/p&gt;
+&lt;h3&gt;Cumulative case count&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="Cumulative case count" src="http://matthewburke1995.github.io/images/covid19/cumulative_case_count.png"&gt;&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="statistics"></category><category term="data"></category><category term="statistics"></category></entry><entry><title>Predicting the remaining matches of the 19/20 Premier League</title><link href="http://matthewburke1995.github.io/premier-league-1920.html" rel="alternate"></link><published>2020-04-16T10:20:00+10:00</published><updated>2020-04-16T10:20:00+10:00</updated><author><name>Matthew Burke</name></author><id>tag:matthewburke1995.github.io,2020-04-16:/premier-league-1920.html</id><summary type="html">&lt;p&gt;Using pymc3 to predict the remaining matches of the 19/20 premier league season.&lt;/p&gt;</summary><content type="html">&lt;h4&gt;tl;dr Liverpool probably break the 100 point record, Sheffield United make it to the Champions League 1 in 4 times, playing out the season in neutral venues benefits Chelsea but disadvantages Manchester United&lt;/h4&gt;
 &lt;p&gt;With the 2019/20 premier league on standby due to coronavirus, many people are wondering what will happen with the rest of the season. With the power of a hierarchical bayesian model and the data from the season so far I'll try to predict the final standings for each team.&lt;/p&gt;
 &lt;p&gt;If you don't like looking at equations you might want to scroll down to the results. You can also &lt;a href="https://github.com/MatthewBurke1995/premier-league-predction-1920"&gt;check out the code on github&lt;/a&gt;.&lt;/p&gt;
 &lt;h2&gt;Assumptions in the model&lt;/h2&gt;
@@ -21,7 +102,7 @@
 &lt;div class="math"&gt;$$ home_{t} = Normal(0,\tau_{home}) $$&lt;/div&gt;
 &lt;div class="math"&gt;$$ \tau_{att,def,home} = Gamma(.1,.1) $$&lt;/div&gt;
 &lt;h2&gt;Results&lt;/h2&gt;
-&lt;p&gt;I simulated the remaining season games 1000 times with the above model&lt;/p&gt;
+&lt;p&gt;I simulated the remaining season games 1000 times with the above model.&lt;/p&gt;
 &lt;h3&gt;Predicted positions&lt;/h3&gt;
 &lt;p&gt;Although it's mathematically possible for Manchester City to come first, across the 1000 simulations that I ran Liverpool always came in first. Sheffield united have a 1 in 4 chance of getting a Champions League spot. Norwich are relegated 9/10 times and Aston Villa end up relegated approximately 2 thirds of the time.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Position" src="http://matthewburke1995.github.io/images/posterior_position.png"&gt;&lt;/p&gt;
