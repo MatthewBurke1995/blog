@@ -1,5 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mattb/log</title><link href="http://matthewburke1995.github.io/" rel="alternate"></link><link href="http://matthewburke1995.github.io/feeds/all-en.atom.xml" rel="self"></link><id>http://matthewburke1995.github.io/</id><updated>2020-05-05T10:20:00+10:00</updated><subtitle>My 2.000000004 cents</subtitle><entry><title>Measuring the effects of social distancing policy</title><link href="http://matthewburke1995.github.io/covid-distancing.html" rel="alternate"></link><published>2020-05-05T10:20:00+10:00</published><updated>2020-05-05T10:20:00+10:00</updated><author><name>Matthew Burke</name></author><id>tag:matthewburke1995.github.io,2020-05-05:/covid-distancing.html</id><summary type="html">&lt;p&gt;Making the R0 value time dependent as a way of measuring the effectiveness of Australian social distancing policy&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recently there was a &lt;a href="https://news.ycombinator.com/item?id=22915837"&gt;post on hacker news about the Sigmoid function&lt;/a&gt; and its relevance to that thing on the news. There's also been a &lt;a href="https://www.medrxiv.org/content/10.1101/2020.04.10.20060822v1.full.pdf"&gt;paper on medRxiv&lt;/a&gt; about predicting the maximum amount of COVID-19 cases after reaching the peak number of new daily infections. &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mattb/log</title><link href="http://matthewburke1995.github.io/" rel="alternate"></link><link href="http://matthewburke1995.github.io/feeds/all-en.atom.xml" rel="self"></link><id>http://matthewburke1995.github.io/</id><updated>2020-05-22T23:20:00+10:00</updated><subtitle>My 2.000000004 cents</subtitle><entry><title>MRP with CVD</title><link href="http://matthewburke1995.github.io/mrp-cvd.html" rel="alternate"></link><published>2020-05-22T23:20:00+10:00</published><updated>2020-05-22T23:20:00+10:00</updated><author><name>Matthew Burke</name></author><id>tag:matthewburke1995.github.io,2020-05-22:/mrp-cvd.html</id><summary type="html">&lt;p&gt;Multilevel regression with poststratification to predict Australian deaths with Florida data&lt;/p&gt;</summary><content type="html">&lt;p&gt;(&lt;em&gt;Disclaimer: If you think the analysis here is any good then you're sorely mistaken, this post is primarily about MRP and the issues of the CFR measure&lt;/em&gt;)&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;a href="https://github.com/MatthewBurke1995/MRP-with-cvd"&gt;Feel free to run the analysis yourself&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;In the previous post I wrote about predicting the number of covid cases using some research out of Canada, this post is about predicting the end state of each case.&lt;/p&gt;
+&lt;h2&gt;Why MRP?&lt;/h2&gt;
+&lt;p&gt;Multilevel regression with poststratification (MRP) has been used extensively to predict election results based on a few limited polls. In terms of MRP, predicting how a group of people will vote (based on features such as age, race and gender) is analagous to predicting how many people (based of age, gender and comorbidities) will end up in a certain state (e.g. recovered, going to ICU, deceased) because of the current pandemic. &lt;/p&gt;
+&lt;p&gt;There has been a lot of talk about Case Fatality Rate (CRF) and R0 but both of those numbers are context dependent. If somehow you could control for the amount of interactions people have in each country then you could get a number for infections per interaction and you'd be able to apply that lots of other contexts from the antisocial Finns to the high density cities of India. Similarly if you could control for gender and age when calculating CFR then you could work out the CFR for each gender and age group and apply it to the demographics of different countries.&lt;/p&gt;
+&lt;h2&gt;The data&lt;/h2&gt;
+&lt;p&gt;Florida have released age and gender data for each recorded covid case along with what happened to the patient for a more robust model we'd probably want to know any comorbidities the patient has, but without that information we'll just have to make the assumption that the rates of comorbidities are similar across age and gender groups in Australia and Florida. Korea has released a similar dataset, if you were so inclined you could improve the model by adding in the Korean data as well. &lt;/p&gt;
+&lt;h2&gt;The model&lt;/h2&gt;
+&lt;div class="math"&gt;$$\begin{align*}
+\theta_i = \beta_0 + \alpha^{\textrm{gender}}_{j(i)} + \alpha^{\textrm{age}}_{k(i)}\\
+\log \left(\frac{p_i}{1 - p_i}\right) &amp;amp; = \theta_i \\
+y_i &amp;amp; \sim \textrm{Bernoulli}(n_i, p_i)
+\end{align*}$$&lt;/div&gt;
+&lt;p&gt;For gender women are encoded as 0, men as 1. ages are grouped by multiples of 5 i.e. floor(age/5). I made the assumption that risk increases linearly with age. Only using two variables is a bit boring but I'd rather have boring models and rights to privacy than the alternative.&lt;/p&gt;
+&lt;h3&gt;Constant&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="Constant" src="http://matthewburke1995.github.io/images/mrp/B0.png"&gt;&lt;/p&gt;
+&lt;p&gt;This could be interpreted as the fatality rate for the least prone group, women under 5 years old.&lt;/p&gt;
+&lt;h3&gt;Gender coefficient&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="Gender coefficient" src="http://matthewburke1995.github.io/images/mrp/a_gender.png"&gt;&lt;/p&gt;
+&lt;h3&gt;Age coefficient&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="Age coefficient" src="http://matthewburke1995.github.io/images/mrp/a_age.png"&gt;&lt;/p&gt;
+&lt;h3&gt;Australia Postsratification&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="Australian deaths under Florida circumstances" src="http://matthewburke1995.github.io/images/mrp/australia_deaths.png"&gt;&lt;/p&gt;
+&lt;p&gt;If every person in Australia were to be infected over a long period of time such that Australians that needed ventillators and ICUbe be beds would have access to them then the total amount of deaths would be between 620,000 and 630,000. &lt;/p&gt;
+&lt;p&gt;If you were to apply the Florida CFR to the whole Australian population then you'd expect close to twice that much (1,140,000 deaths). Why the discrepancy? The average age of florida cases was 52, whereas the average for Australians is 38. MRP accounts for the difference but CFR doesn't.&lt;/p&gt;
+&lt;h2&gt;Problems with the model&lt;/h2&gt;
+&lt;p&gt;Almost every CFR measure will be an upper limit because its very easy to miss an asymptomatic case but much more unlikely to miss a death. The current CFR (as of May 22) in Australia is about 1.5% which is even less than what's predicted above. This is probably because by the very nature of a case being severe it's more likely to be accounted for, with poststratification it's alright to sample a non-random, non-representative group of the wider population but it can't be biased in terms of the outcome. Here's a voting analogy, it would be alright to poll the street you live on which would be very biased towards a single social class but it wouldn't be alright to take a poll at a Trump rally, which is essentially what's happening when you only add cases of people who are seeking out tests due to showing symptoms. &lt;/p&gt;
+&lt;h2&gt;Addendum&lt;/h2&gt;
+&lt;p&gt;After writing the last paragraph I had a thought that since Korea were doing mandatory testing on arrivals (i.e. not testing people based solely on symptoms) then that overseas cases would avoid the above problem. There weren't enough overseas arrivals cases to do an exclusive analysis, so instead I did the same analysis across all Korean cases (pictures are in the same order as above).&lt;/p&gt;
+&lt;h3&gt;Constant&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="Constant" src="http://matthewburke1995.github.io/images/mrp/korea_B0.png"&gt;&lt;/p&gt;
+&lt;h3&gt;Gender coefficient&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="Gender coefficient" src="http://matthewburke1995.github.io/images/mrp/korea_a_gender.png"&gt;&lt;/p&gt;
+&lt;h3&gt;Age coefficient&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="Age coefficient" src="http://matthewburke1995.github.io/images/mrp/korea_a_age.png"&gt;&lt;/p&gt;
+&lt;h3&gt;Australia Postsratification&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="Australian deaths under Korean circumstances" src="http://matthewburke1995.github.io/images/mrp/korea_australia_deaths.png"&gt;&lt;/p&gt;
+&lt;p&gt;What's interesting about the Korean multilevel regression model is that the B0 is much lower but the gender coefficient almost cancels out the decrease. Which means Korean men are just as worse off as Floridian men but Korean women are much better off (equivelant of being approx. 5 years younger) than Floridian women.&lt;/p&gt;
+&lt;p&gt;Using Korean data for the model reduces the amount of predicted Australian deaths by approximately 20%. Here's a thought, if you were to redo this process for each country you'd have a measure similar to CFR that accounts for the age and gender of the countries cases. I don't know what you could do with that measure. I guess if you assume health outcomes between countries are the same then you could use it as a measure for testing rate, if you assume testing rates are the same between countries then you could use it as a measure for health outcomes but you can't do both.&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="statistics"></category><category term="data"></category><category term="statistics"></category><category term="covid"></category><category term="bayesian"></category></entry><entry><title>Measuring the effects of social distancing policy</title><link href="http://matthewburke1995.github.io/covid-distancing.html" rel="alternate"></link><published>2020-05-05T10:20:00+10:00</published><updated>2020-05-05T10:20:00+10:00</updated><author><name>Matthew Burke</name></author><id>tag:matthewburke1995.github.io,2020-05-05:/covid-distancing.html</id><summary type="html">&lt;p&gt;Making the R0 value time dependent as a way of measuring the effectiveness of Australian social distancing policy&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recently there was a &lt;a href="https://news.ycombinator.com/item?id=22915837"&gt;post on hacker news about the Sigmoid function&lt;/a&gt; and its relevance to that thing on the news. There's also been a &lt;a href="https://www.medrxiv.org/content/10.1101/2020.04.10.20060822v1.full.pdf"&gt;paper on medRxiv&lt;/a&gt; about predicting the maximum amount of COVID-19 cases after reaching the peak number of new daily infections. &lt;/p&gt;
 &lt;p&gt;It's true that if you know exactly how many people, &lt;span class="math"&gt;\(N\)&lt;/span&gt;, will be infected then the cumulative number of cases will look something like a sigmoid function approaching &lt;span class="math"&gt;\(N\)&lt;/span&gt;. But the real phenomena we are seeing is a changing R0 value due to social distancing. &lt;/p&gt;
 &lt;p&gt;A group of researchers from Canada used a SEIQR model while adding a &lt;span class="math"&gt;\(f(t)\)&lt;/span&gt; multiplier to the R0 value. The idea is that &lt;span class="math"&gt;\(f(t)\)&lt;/span&gt; starts at 1 and decreases linearly over the time that social distancing measures are introduced. You can see &lt;a href="https://github.com/carolinecolijn/distancing-impact-covid19"&gt;their git repo here&lt;/a&gt; with my clone for Australian data and parameters &lt;a href="https://github.com/MatthewBurke1995/distancing-impact-covid-19-australia"&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;If you'd like to run the code:&lt;/p&gt;
@@ -19,6 +120,7 @@ docker run -e &lt;span class="nv"&gt;PASSWORD&lt;/span&gt;&lt;span class="o"&gt;
 &lt;p&gt;At the current rate Australia reaches 0 new cases in mid May (according to the model anyway).&lt;/p&gt;
 &lt;h3&gt;Cumulative case count&lt;/h3&gt;
 &lt;p&gt;&lt;img alt="Cumulative case count" src="http://matthewburke1995.github.io/images/covid19/cumulative_case_count.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Edit: The errors for the cumulative case count aren't random, infact they have a downward trend, my guess is that the effects of social distancing were well and truly in effect before the first government restrictions were put into place, if you wanted you could change the start date parameter (start_decline parameter in analysis/fit_seeiqr)&lt;/em&gt;&lt;/p&gt;
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",

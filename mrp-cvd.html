@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+          <title>mattb/log - MRP with CVD</title>
+        <meta charset="utf-8" />
+        <link href="http://matthewburke1995.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mattb/log Full Atom Feed" />
+        <link href="http://matthewburke1995.github.io/feeds/statistics.atom.xml" type="application/atom+xml" rel="alternate" title="mattb/log Categories Atom Feed" />
+
+        <link rel="stylesheet" href="./theme/css/rdark.css" />
+	<link rel="stylesheet" type="text/css" href="./theme/css/main.css" />
+        <link href="./" type="application/atom+xml" rel="alternate" title="mattb/log ATOM Feed" /><!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	
+<!-- Using MathJax, with the delimiters $ -->
+<!-- Conflict with pygments for the .mo and .mi -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  "HTML-CSS": {
+  styles: {
+  ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+  },
+  tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']],processEscapes: true}
+  });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+
+
+
+
+    <meta name="tags" content="data" />
+    <meta name="tags" content="statistics" />
+    <meta name="tags" content="covid" />
+    <meta name="tags" content="bayesian" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="./">mattb/log <strong>My 2.000000004 cents</strong></a></h1>
+        </header><!-- /#banner -->
+        <nav id="menu"><ul>
+            <li class="active"><a href="./category/statistics.html">statistics</a></li>
+        </ul></nav><!-- /#menu -->
+<section id="content" class="body">
+  <header>
+    <h2 class="entry-title">
+      <a href="./mrp-cvd.html" rel="bookmark"
+         title="Permalink to MRP with CVD">MRP with CVD</a></h2>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2020-05-22T23:20:00+10:00">
+      Fri 22 May 2020
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="./author/matthew-burke.html">Matthew Burke</a>
+    </address>
+    <div class="category">
+        Category: <a href="./category/statistics.html">statistics</a>
+    </div>
+    <div class="tags">
+        Tags:
+            <a href="./tag/data.html">data</a>
+            <a href="./tag/statistics.html">statistics</a>
+            <a href="./tag/covid.html">covid</a>
+            <a href="./tag/bayesian.html">bayesian</a>
+    </div>
+  </footer><!-- /.post-info -->
+  <div class="entry-content">
+    <p>(<em>Disclaimer: If you think the analysis here is any good then you're sorely mistaken, this post is primarily about MRP and the issues of the CFR measure</em>)</p>
+<p><em><a href="https://github.com/MatthewBurke1995/MRP-with-cvd">Feel free to run the analysis yourself</a></em></p>
+<p>In the previous post I wrote about predicting the number of covid cases using some research out of Canada, this post is about predicting the end state of each case.</p>
+<h2>Why MRP?</h2>
+<p>Multilevel regression with poststratification (MRP) has been used extensively to predict election results based on a few limited polls. In terms of MRP, predicting how a group of people will vote (based on features such as age, race and gender) is analagous to predicting how many people (based of age, gender and comorbidities) will end up in a certain state (e.g. recovered, going to ICU, deceased) because of the current pandemic. </p>
+<p>There has been a lot of talk about Case Fatality Rate (CRF) and R0 but both of those numbers are context dependent. If somehow you could control for the amount of interactions people have in each country then you could get a number for infections per interaction and you'd be able to apply that lots of other contexts from the antisocial Finns to the high density cities of India. Similarly if you could control for gender and age when calculating CFR then you could work out the CFR for each gender and age group and apply it to the demographics of different countries.</p>
+<h2>The data</h2>
+<p>Florida have released age and gender data for each recorded covid case along with what happened to the patient for a more robust model we'd probably want to know any comorbidities the patient has, but without that information we'll just have to make the assumption that the rates of comorbidities are similar across age and gender groups in Australia and Florida. Korea has released a similar dataset, if you were so inclined you could improve the model by adding in the Korean data as well. </p>
+<h2>The model</h2>
+<div class="math">$$\begin{align*}
+\theta_i = \beta_0 + \alpha^{\textrm{gender}}_{j(i)} + \alpha^{\textrm{age}}_{k(i)}\\
+\log \left(\frac{p_i}{1 - p_i}\right) &amp; = \theta_i \\
+y_i &amp; \sim \textrm{Bernoulli}(n_i, p_i)
+\end{align*}$$</div>
+<p>For gender women are encoded as 0, men as 1. ages are grouped by multiples of 5 i.e. floor(age/5). I made the assumption that risk increases linearly with age. Only using two variables is a bit boring but I'd rather have boring models and rights to privacy than the alternative.</p>
+<h3>Constant</h3>
+<p><img alt="Constant" src="./images/mrp/B0.png"></p>
+<p>This could be interpreted as the fatality rate for the least prone group, women under 5 years old.</p>
+<h3>Gender coefficient</h3>
+<p><img alt="Gender coefficient" src="./images/mrp/a_gender.png"></p>
+<h3>Age coefficient</h3>
+<p><img alt="Age coefficient" src="./images/mrp/a_age.png"></p>
+<h3>Australia Postsratification</h3>
+<p><img alt="Australian deaths under Florida circumstances" src="./images/mrp/australia_deaths.png"></p>
+<p>If every person in Australia were to be infected over a long period of time such that Australians that needed ventillators and ICUbe be beds would have access to them then the total amount of deaths would be between 620,000 and 630,000. </p>
+<p>If you were to apply the Florida CFR to the whole Australian population then you'd expect close to twice that much (1,140,000 deaths). Why the discrepancy? The average age of florida cases was 52, whereas the average for Australians is 38. MRP accounts for the difference but CFR doesn't.</p>
+<h2>Problems with the model</h2>
+<p>Almost every CFR measure will be an upper limit because its very easy to miss an asymptomatic case but much more unlikely to miss a death. The current CFR (as of May 22) in Australia is about 1.5% which is even less than what's predicted above. This is probably because by the very nature of a case being severe it's more likely to be accounted for, with poststratification it's alright to sample a non-random, non-representative group of the wider population but it can't be biased in terms of the outcome. Here's a voting analogy, it would be alright to poll the street you live on which would be very biased towards a single social class but it wouldn't be alright to take a poll at a Trump rally, which is essentially what's happening when you only add cases of people who are seeking out tests due to showing symptoms. </p>
+<h2>Addendum</h2>
+<p>After writing the last paragraph I had a thought that since Korea were doing mandatory testing on arrivals (i.e. not testing people based solely on symptoms) then that overseas cases would avoid the above problem. There weren't enough overseas arrivals cases to do an exclusive analysis, so instead I did the same analysis across all Korean cases (pictures are in the same order as above).</p>
+<h3>Constant</h3>
+<p><img alt="Constant" src="./images/mrp/korea_B0.png"></p>
+<h3>Gender coefficient</h3>
+<p><img alt="Gender coefficient" src="./images/mrp/korea_a_gender.png"></p>
+<h3>Age coefficient</h3>
+<p><img alt="Age coefficient" src="./images/mrp/korea_a_age.png"></p>
+<h3>Australia Postsratification</h3>
+<p><img alt="Australian deaths under Korean circumstances" src="./images/mrp/korea_australia_deaths.png"></p>
+<p>What's interesting about the Korean multilevel regression model is that the B0 is much lower but the gender coefficient almost cancels out the decrease. Which means Korean men are just as worse off as Floridian men but Korean women are much better off (equivelant of being approx. 5 years younger) than Floridian women.</p>
+<p>Using Korean data for the model reduces the amount of predicted Australian deaths by approximately 20%. Here's a thought, if you were to redo this process for each country you'd have a measure similar to CFR that accounts for the age and gender of the countries cases. I don't know what you could do with that measure. I guess if you assume health outcomes between countries are the same then you could use it as a measure for testing rate, if you assume testing rates are the same between countries then you could use it as a measure for health outcomes but you can't do both.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+  </div><!-- /.entry-content -->
+</section>
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+        </footer><!-- /#contentinfo -->
+</body>
+</html>
